@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
+import Link from "next/link";
 
 const navItems = [
   { label: "Beranda", href: "#hero" },
@@ -81,7 +82,9 @@ export function Navigation() {
                 whileHover={{ x: "200%" }}
                 transition={{ duration: 0.6 }}
               />
-              <span className="relative z-10">Daftar Sekarang</span>
+              <Link href="/login" className="relative z-10">
+                <span className="relative z-10">Login/Daftar</span>
+              </Link>
             </motion.a>
           </div>
 
