@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { ChevronRight } from "lucide-react";
-import AttendanceManager from "@/components/admin/AttendanceManager";
+import AdminAbsensiView from "@/components/admin/AdminAbsensiView";
 
 export default async function AbsensiPage() {
   const schedules = await prisma.classSchedule.findMany({
@@ -33,18 +33,7 @@ export default async function AbsensiPage() {
       </header>
 
       <main className="flex-1 overflow-y-auto px-6 md:px-8 py-8 max-w-6xl">
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-black text-white tracking-tight">
-              Absensi
-            </h1>
-            <p className="text-white/40 font-mono text-sm mt-1.5">
-              Catat kehadiran peserta kelas
-            </p>
-          </div>
-        </div>
-
-        <AttendanceManager
+        <AdminAbsensiView
           schedules={schedules}
           users={users}
           attendances={attendances}
