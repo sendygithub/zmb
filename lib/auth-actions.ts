@@ -53,5 +53,5 @@ export async function registerAction(formData: FormData) {
 }
 
 export async function logoutAction() {
-  await signOut({ redirect: false });
+  await signOut({ redirectTo: "/login" });
 }
