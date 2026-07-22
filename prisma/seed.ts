@@ -1,9 +1,12 @@
 import { PrismaClient } from "@prisma/client";
-import { PrismaLibSql } from "@prisma/adapter-libsql";
+import { PrismaPg } from "@prisma/adapter-pg";
 import bcrypt from "bcryptjs";
 
-const adapter = new PrismaLibSql({
-  url: process.env.DATABASE_URL || "file:./prisma/dev.db",
+const DATABASE_URL =
+  "postgres://postgres.bpeydqaospcqgqwyibps:h4cvR7pRJSn4PA9M@aws-0-us-east-1.pooler.supabase.com:5432/postgres?sslmode=no-verify";
+
+const adapter = new PrismaPg({
+  connectionString: DATABASE_URL,
 });
 
 const prisma = new PrismaClient({ adapter });
