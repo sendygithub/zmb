@@ -3,11 +3,18 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { logoutAction } from "@/lib/auth-actions";
-import { LayoutDashboard, CalendarDays, Users, User } from "lucide-react";
+import {
+  LayoutDashboard,
+  CalendarDays,
+  Users,
+  User,
+  Sparkles,
+} from "lucide-react";
 
 const navItems = [
   { label: "Dashboard", icon: LayoutDashboard, href: "/user" },
   { label: "Kelas Zumba", icon: CalendarDays, href: "/user/kelas" },
+  { label: "Zin", icon: Sparkles, href: "/user/zin" },
   { label: "Membership", icon: Users, href: "/user/membership" },
   { label: "Profile", icon: User, href: "/user/profile" },
 ];

@@ -1,6 +1,7 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { ChevronRight } from "lucide-react";
+import KelasList from "./KelasList";
 
 const DAY_NAMES = [
   "Minggu",
@@ -18,9 +19,21 @@ export default async function UserKelasPage() {
 
   const schedules = await prisma.classSchedule.findMany({
     where: { isActive: true },
-    include: { studio: true, attendances: { where: { userId: user.id } } },
+    include: {
+      studio: true,
+      attendances: {
+        where: { userId: user.id },
+      },
+      _count: {
+        select: { attendances: true },
+      },
+    },
     orderBy: [{ dayOfWeek: "asc" }, { startTime: "asc" }],
   });
+
+  // Get today's date for default attendance date
+  const today = new Date();
+  const todayStr = today.toISOString().split("T")[0];
 
   return (
     <>
@@ -38,58 +51,16 @@ export default async function UserKelasPage() {
             Kelas Zumba
           </h1>
           <p className="text-white/40 font-mono text-sm mt-1.5">
-            {schedules.length} kelas tersedia
+            {schedules.length} kelas tersedia minggu ini
           </p>
         </div>
 
-        <div className="space-y-3">
-          {schedules.length === 0 ? (
-            <div className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-14 text-center">
-              <p className="text-white/40 text-sm">Belum ada kelas tersedia.</p>
-            </div>
-          ) : (
-            schedules.map((s) => {
-              const hasAttended = s.attendances.length > 0;
-              return (
-                <div
-                  key={s.id}
-                  className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-5 hover:border-white/[0.12] transition-colors"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0 flex-1">
-                      <h3 className="text-base font-bold text-white">
-                        {s.title}
-                      </h3>
-                      <p className="text-white/50 text-xs font-mono mt-1">
-                        {DAY_NAMES[s.dayOfWeek]} · {s.startTime} - {s.endTime}
-                      </p>
-                      {s.description && (
-                        <p className="text-white/40 text-xs mt-2">
-                          {s.description}
-                        </p>
-                      )}
-                      <div className="flex items-center gap-4 text-[11px] font-mono text-white/40 mt-2">
-                        <span>👤 {s.instructor}</span>
-                        <span>📍 {s.studio.name}</span>
-                        <span>👥 {s.maxParticipants} peserta</span>
-                      </div>
-                    </div>
-                    <div className="text-right shrink-0">
-                      <p className="text-[#AFFF00] font-bold text-lg">
-                        Rp {s.price.toLocaleString()}
-                      </p>
-                      {hasAttended && (
-                        <span className="text-[10px] text-[#AFFF00] bg-[#AFFF00]/10 px-2 py-0.5 rounded-full">
-                          Pernah diikuti
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              );
-            })
-          )}
-        </div>
+        <KelasList
+          schedules={schedules}
+          userId={user.id}
+          todayStr={todayStr}
+          DAY_NAMES={DAY_NAMES}
+        />
       </main>
     </>
   );
