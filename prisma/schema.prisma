@@ -11,7 +11,99 @@ model User {
   name      String?
   email     String   @unique
   password  String
-  role      String   @default("user")
+  role      String   @default("user") // user, zin, owner
+  phone     String?
+  avatar    String?
+  studioId  String?  // relasi ke studio jika role = zin
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // Relations
+  studio        Studio?       @relation("StudioInstructors", fields: [studioId], references: [id])
+  ownedStudios  Studio[]      @relation("StudioOwner")
+  attendances   Attendance[]
+  memberships   Membership[]
+  transactions  Transaction[]
+}
+
+model Studio {
+  id          String   @id @default(cuid())
+  name        String
+  address     String
+  phone       String?
+  description String?
+  ownerId     String   // owner yang membuat
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  owner       User             @relation("StudioOwner", fields: [ownerId], references: [id])
+  instructors User[]           @relation("StudioInstructors")
+  schedules   ClassSchedule[]
+  memberships Membership[]
+}
+
+model ClassSchedule {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  instructorId String?
+  instructor  String   // nama instruktur (denormalized)
+  studioId    String
+  dayOfWeek   Int      // 0=Sunday, 1=Monday, etc.
+  startTime   String   // "07:00"
+  endTime     String   // "08:00"
+  maxParticipants Int  @default(30)
+  location    String   @default("Studio Binong")
+  price       Int      @default(0)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  studio      Studio       @relation(fields: [studioId], references: [id])
+  attendances Attendance[]
+}
+
+model Attendance {
+  id         String   @id @default(cuid())
+  userId     String
+  scheduleId String
+  date       DateTime
+  status     String   @default("hadir") // hadir, izin, alpha
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  user     User          @relation(fields: [userId], references: [id])
+  schedule ClassSchedule @relation(fields: [scheduleId], references: [id])
+
+  @@unique([userId, scheduleId, date])
+}
+
+model Membership {
+  id        String   @id @default(cuid())
+  userId    String
+  studioId  String
+  status    String   @default("active") // active, expired, cancelled
+  startDate DateTime @default(now())
+  endDate   DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id])
+  studio Studio @relation(fields: [studioId], references: [id])
+
+  @@unique([userId, studioId])
+}
+
+model Transaction {
+  id        String   @id @default(cuid())
+  userId    String
+  amount    Int
+  type      String   // membership, class_payment
+  status    String   @default("completed") // pending, completed, failed
+  reference String?  // reference ID
+  description String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
 }

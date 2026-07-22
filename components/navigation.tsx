@@ -43,8 +43,8 @@ export function Navigation() {
             whileTap={{ scale: 0.95 }}
           >
             <span className="text-xl font-black tracking-tight">
-              <span className="text-[#121212]">Terong</span>
-              <span className="text-[#AFFF00]">Zumba</span>
+              <span className="text-[#121212]">Sanggar</span>
+              <span className="text-[#AFFF00]">Terong</span>
             </span>
           </motion.a>
 

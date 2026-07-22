@@ -4,12 +4,27 @@ import { signIn, signOut } from "./auth";
 
 export async function loginAction(formData: FormData) {
   try {
-    await signIn("credentials", {
+    const result = await signIn("credentials", {
       email: formData.get("email") as string,
       password: formData.get("password") as string,
       redirect: false,
     });
-    return { success: true, error: null };
+
+    if (result?.error) {
+      return { success: false, error: "Email atau password salah" };
+    }
+
+    // Get user role from the session
+    const { auth } = await import("./auth");
+    const session = await auth();
+    const user = session?.user as any;
+
+    let redirectTo = "/dashboard";
+    if (user?.role === "owner") redirectTo = "/admin";
+    else if (user?.role === "zin") redirectTo = "/zin";
+    else if (user?.role === "user") redirectTo = "/user";
+
+    return { success: true, error: null, redirectTo };
   } catch (error: any) {
     if (error?.type === "CredentialsSignin") {
       return { success: false, error: "Email atau password salah" };

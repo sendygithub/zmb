@@ -16,8 +16,8 @@ export default function BrandPanel() {
       <div className="relative z-10 px-8 lg:px-12 pt-8">
         <Link href="/" className="inline-flex items-center gap-2">
           <span className="text-xl font-black tracking-tight">
-            <span className="text-white">Terong</span>
-            <span className="text-[#AFFF00]">Zumba</span>
+            <span className="text-white">Sanggar </span>
+            <span className="text-[#AFFF00]">Terong</span>
           </span>
         </Link>
       </div>

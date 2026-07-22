@@ -21,7 +21,7 @@ export function useLogin() {
     const result = await loginAction(formData);
 
     if (result.success) {
-      router.push("/dashboard");
+      router.push(result.redirectTo || "/dashboard");
       router.refresh();
       return;
     }
