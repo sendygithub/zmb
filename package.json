@@ -6,7 +6,9 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "eslint .",
-    "start": "next start"
+    "start": "next start",
+    "db:studio": "npx prisma studio --url=\"postgres://postgres.bpeydqaospcqgqwyibps:h4cvR7pRJSn4PA9M@aws-0-us-east-1.pooler.supabase.com:5432/postgres?sslmode=no-verify\"",
+    "db:seed": "npx tsx ./prisma/seed.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.3",
